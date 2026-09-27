@@ -1,0 +1,1 @@
+# -rnek-psikolog2
