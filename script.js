@@ -67,26 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Mobil Menü Toggle
+    // 5. Mobil Menü Toggle (Temiz, Sınıf Tabanlı & Dikey Açılır)
     const mobileToggle = document.getElementById('mobileToggle');
     const mainNav = document.getElementById('mainNav');
     if (mobileToggle && mainNav) {
-        mobileToggle.addEventListener('click', () => {
-            const isVisible = mainNav.style.display === 'block';
-            mainNav.style.display = isVisible ? 'none' : 'block';
-            if (!isVisible) {
-                mainNav.style.position = 'absolute';
-                mainNav.style.top = '74px';
-                mainNav.style.left = '0';
-                mainNav.style.width = '100%';
-                mainNav.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                mainNav.style.backdropFilter = 'blur(20px)';
-                mainNav.style.webkitBackdropFilter = 'blur(20px)';
-                mainNav.style.borderRadius = '20px';
-                mainNav.style.border = '1px solid rgba(255, 255, 255, 0.9)';
-                mainNav.style.padding = '24px 20px';
-                mainNav.style.boxShadow = '0 16px 40px rgba(45, 64, 52, 0.12)';
-            }
+        mobileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = mainNav.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
         });
     }
 
@@ -108,7 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     if (window.innerWidth <= 768 && mainNav) {
-                        mainNav.style.display = 'none';
+                        mainNav.classList.remove('active');
+                        if (mobileToggle) {
+                            mobileToggle.classList.remove('active');
+                            mobileToggle.setAttribute('aria-expanded', 'false');
+                        }
                     }
                 }
             }
@@ -154,8 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. Mobil Menü Dışına Tıklandığında Kapanma
     document.addEventListener('click', (e) => {
         if (window.innerWidth <= 768 && mainNav && mobileToggle) {
-            if (!mainNav.contains(e.target) && !mobileToggle.contains(e.target) && mainNav.style.display === 'block') {
-                mainNav.style.display = 'none';
+            if (!mainNav.contains(e.target) && !mobileToggle.contains(e.target) && mainNav.classList.contains('active')) {
+                mainNav.classList.remove('active');
+                mobileToggle.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
             }
         }
     });
